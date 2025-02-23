@@ -20,4 +20,13 @@ grow_horizontal = 0
 text = "Solve Maze"
 metadata/_edit_use_anchors_ = true
 
+[node name="SolveTime" type="Label" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 92.0
+grow_vertical = 0
+text = "Solve Time: S"
+
 [connection signal="button_down" from="CanvasLayer/SolveMaze" to="." method="solve_maze"]

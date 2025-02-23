@@ -99,4 +99,5 @@ func draw_solution(solution: PackedVector2Array) -> void:
 
 func solve_maze() -> void:
 	solver.solve_maze(maze)
+	$CanvasLayer/SolveTime.text = "Solve time: " + str(solver.get_solve_time()) + "ms"
 	queue_redraw()

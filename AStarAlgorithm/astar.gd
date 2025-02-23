@@ -26,6 +26,7 @@ class Solver:
 	#var visited: Array[Cell]
 	var directions: Array[Vector2]
 	var cachedSolution: PackedVector2Array
+	var solveTime: int
 	
 	func _init(movement: movementType) -> void:
 		switch_movement(movement)
@@ -47,8 +48,8 @@ class Solver:
 		var goal: Vector2 = maze.get_end()
 		if (start == goal):
 			print("AStar [ERROR]: Invalid start/end")
-			var totalTime: int = Time.get_ticks_msec() - start_time
-			print("Time taken: " + str(totalTime) + " ms")
+			solveTime = Time.get_ticks_msec() - start_time
+			print("Time taken: " + str(solveTime) + " ms")
 			return []
 			
 		var unvisited: Array[Cell] = [Cell.new(start, null)]
@@ -63,8 +64,8 @@ class Solver:
 					cachedSolution.append(nextCell.get_position())
 					nextCell = nextCell.get_previous()
 				
-				var totalTime: int = Time.get_ticks_msec() - start_time
-				print("Time taken: " + str(totalTime) + " ms")
+				solveTime = Time.get_ticks_msec() - start_time
+				print("Time taken: " + str(solveTime) + " ms")
 				return cachedSolution
 			var neighbors: Array[Cell] = get_neighbors(unvisited.pop_front(), maze, visited)
 			unvisited.append_array(neighbors)
@@ -99,6 +100,9 @@ class Solver:
 	
 	func clear_cache() -> void:
 		cachedSolution = []
+	
+	func get_solve_time() -> int:
+		return solveTime
 
 
 

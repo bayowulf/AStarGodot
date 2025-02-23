@@ -5,5 +5,3 @@
 [node name="Main" type="Node"]
 
 [node name="Maze" parent="." instance=ExtResource("1_1k5ln")]
-gridSize = Vector2(30, 15)
-tileSize = 32
