@@ -4,22 +4,29 @@ class Solver:
 	'''
 	Times:
 		V1 (basic):
-			Empty: 110-119
-			Long: 19-23
-			One Path: 2-3
+			Empty: 114
+			Long: 20
+			One Path: 2
 		
 		V2 (reverse unvisited traversal):
-			Empty: 
-			Long: 
-			One Path: 
+			Empty: 60 (but wrong)
+			Long: 20
+			One Path: 2
+		
+		V3 (lowest cost first, cost is dx+dy):
+			Empty: 5 (but wrong)
+			Long: 22
+			One Path: 2
 	'''
 	class Cell:
 		var pos: Vector2
 		var previous: Cell
+		var cost: int
 		
-		func _init(cellPos:Vector2, previousCell: Cell) -> void:
+		func _init(cellPos:Vector2, previousCell: Cell, goal: Vector2) -> void:
 			pos = cellPos
 			previous = previousCell
+			cost = abs(goal.x - pos.x + goal.y - pos.y)
 		
 		func get_position() -> Vector2:
 			return pos
@@ -27,8 +34,11 @@ class Solver:
 		func get_previous() -> Cell:
 			return previous
 		
+		func get_cost() -> int:
+			return cost
+		
 	enum movementType {
-			CARDINAL,
+		CARDINAL,
 		DIAGONAL,
 		OMNIDIRECTIONAL
 	}
@@ -62,7 +72,7 @@ class Solver:
 			print("Time taken: " + str(solveTime) + " ms")
 			return []
 			
-		var unvisited: Array[Cell] = [Cell.new(start, null)]
+		var unvisited: Array[Cell] = [Cell.new(start, null, goal)]
 		var visited: Array[Cell] = []
 		
 		while (!unvisited.is_empty()):
@@ -78,14 +88,14 @@ class Solver:
 				print("Time taken: " + str(solveTime) + " ms")
 				return path
 			
-			var neighbors: Array[Cell] = get_neighbors(unvisited.pop_back(), maze, visited)
+			var neighbors: Array[Cell] = get_neighbors(unvisited.pop_at(get_lowest_cost(unvisited)), maze, visited, goal)
 			unvisited.append_array(neighbors)
 			visited.append_array(neighbors)
 		
 		print("No path found")
 		return []
 	
-	func get_neighbors(cell: Cell, maze: AStar.Maze, visited: Array[Cell]) -> Array[Cell]:
+	func get_neighbors(cell: Cell, maze: AStar.Maze, visited: Array[Cell], goal: Vector2) -> Array[Cell]:
 		var neighbors: Array[Cell] = []
 		var mazeSize: Vector2 = maze.get_size()
 		
@@ -99,9 +109,16 @@ class Solver:
 							alreadyVisited = true
 							break
 					if (!alreadyVisited): # Check if unvisited
-						neighbors.append(Cell.new(newPos, cell))
+						neighbors.append(Cell.new(newPos, cell, goal))
 		
 		return neighbors
+	
+	func get_lowest_cost(cells: Array[Cell]) -> int:
+		var lowestCost: int = 0
+		for index in range(1, cells.size()):
+			if cells[index].get_cost() < cells[lowestCost].get_cost():
+				lowestCost = index
+		return lowestCost
 	
 	func get_solve_time() -> int:
 		return solveTime
