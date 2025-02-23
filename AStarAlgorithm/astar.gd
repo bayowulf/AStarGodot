@@ -1,6 +1,18 @@
 class_name AStar
 
 class Solver:
+	'''
+	Times:
+		V1 (basic):
+			Empty: 110-119
+			Long: 19-23
+			One Path: 2-3
+		
+		V2 (reverse unvisited traversal):
+			Empty: 
+			Long: 
+			One Path: 
+	'''
 	class Cell:
 		var pos: Vector2
 		var previous: Cell
@@ -54,9 +66,9 @@ class Solver:
 		var visited: Array[Cell] = []
 		
 		while (!unvisited.is_empty()):
-			if (unvisited[0].get_position() == goal):
-				var path: PackedVector2Array = [unvisited[0].get_position()]
-				var nextCell = unvisited[0].get_previous()
+			if (unvisited.back().get_position() == goal): # Found path
+				var path: PackedVector2Array = [unvisited.back().get_position()]
+				var nextCell = unvisited.back().get_previous()
 				
 				while (nextCell != null):
 					path.append(nextCell.get_position())
@@ -65,7 +77,8 @@ class Solver:
 				solveTime = Time.get_ticks_msec() - start_time
 				print("Time taken: " + str(solveTime) + " ms")
 				return path
-			var neighbors: Array[Cell] = get_neighbors(unvisited.pop_front(), maze, visited)
+			
+			var neighbors: Array[Cell] = get_neighbors(unvisited.pop_back(), maze, visited)
 			unvisited.append_array(neighbors)
 			visited.append_array(neighbors)
 		
@@ -130,3 +143,7 @@ class Maze:
 	
 	func get_size() -> Vector2:
 		return gridSize
+	
+	func set_maze(newGrid: PackedInt32Array) -> void:
+		assert(newGrid.size() == grid.size(), "Invalid grid size")
+		grid = newGrid

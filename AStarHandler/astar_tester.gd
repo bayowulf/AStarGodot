@@ -3,6 +3,7 @@ extends Node2D
 @export_category("Maze")
 @export var gridSize: Vector2 = Vector2(10, 10)
 @export var tileSize: int = 16
+@export var presetsDict: Dictionary = {}
 
 @export_category("Colors")
 @export var emptyColor: Color = Color(1.0, 1.0, 1.0) # 0
@@ -21,6 +22,10 @@ var cachedPath: PackedVector2Array
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	for index in len(presetsDict):
+		$CanvasLayer/MazePresets.add_item(presetsDict.keys()[index], index)
+		$CanvasLayer/MazePresets.get_popup().set_item_as_radio_checkable(index, false)
+	$CanvasLayer/MazePresets.selected = -1
 	maze = AStar.Maze.new(gridSize)
 	solver = AStar.Solver.new(AStar.Solver.movementType.CARDINAL)
 	cachedPath = []
@@ -102,4 +107,9 @@ func draw_solution(solution: PackedVector2Array) -> void:
 func solve_maze() -> void:
 	cachedPath = solver.solve_maze(maze)
 	$CanvasLayer/SolveTime.text = "Solve time: " + str(solver.get_solve_time()) + "ms"
+	queue_redraw()
+
+func set_maze_preset(index: int) -> void:
+	$CanvasLayer/MazePresets.selected = -1
+	maze.set_maze(PackedInt32Array(presetsDict.values()[index]))
 	queue_redraw()
