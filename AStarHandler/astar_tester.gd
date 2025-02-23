@@ -33,7 +33,7 @@ func _ready() -> void:
 	$CanvasLayer/XSize.value = gridSize.x
 	$CanvasLayer/YSize.value = gridSize.y
 	maze = AStar.Maze.new(gridSize)
-	solver = AStar.Solver.new(AStar.Solver.movementType.CARDINAL, AStar.Solver.costCalculation.CUMULATIVE)
+	solver = AStar.Solver.new($CanvasLayer/MovementType.selected, $CanvasLayer/CostCalculations.selected)
 	cachedPath = []
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
