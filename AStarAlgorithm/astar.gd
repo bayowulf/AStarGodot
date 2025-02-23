@@ -18,15 +18,22 @@ class Solver:
 			Long: 22
 			One Path: 2
 	'''
+	
 	class Cell:
 		var pos: Vector2
 		var previous: Cell
 		var cost: int
 		
-		func _init(cellPos:Vector2, previousCell: Cell, goal: Vector2) -> void:
+		func _init(cellPos:Vector2, previousCell: Cell, goal: Vector2, costCalc: costCalculation) -> void:
 			pos = cellPos
 			previous = previousCell
-			cost = abs(goal.x - pos.x + goal.y - pos.y)
+			match costCalc:
+				costCalculation.DXDY:
+					cost = abs(goal.x - pos.x + goal.y - pos.y)
+				costCalculation.CUMULATIVE:
+					cost = abs(goal.x - pos.x + goal.y - pos.y)
+					if (previous != null):
+						cost += previous.get_cost()
 		
 		func get_position() -> Vector2:
 			return pos
@@ -34,23 +41,31 @@ class Solver:
 		func get_previous() -> Cell:
 			return previous
 		
+		func change_previous(newPrevious: Cell) -> void:
+			previous = newPrevious
+		
 		func get_cost() -> int:
 			return cost
-		
+	
+	
 	enum movementType {
 		CARDINAL,
 		DIAGONAL,
 		OMNIDIRECTIONAL
 	}
 	
-	#var maze: AStarMaze
-	#var unvisited: PackedVector2Array
-	#var visited: Array[Cell]
+	enum costCalculation {
+		DXDY,
+		CUMULATIVE
+	}
+	
 	var directions: Array[Vector2]
+	var chosenCalculation: costCalculation
 	var solveTime: int
 	
-	func _init(movement: movementType) -> void:
+	func _init(movement: movementType, costCalc: costCalculation) -> void:
 		switch_movement(movement)
+		switch_cost_calculation(costCalc)
 	
 	func switch_movement(movement: movementType) -> void:
 		match movement:
@@ -60,6 +75,9 @@ class Solver:
 				directions = [Vector2(1, 1), Vector2(1, -1), Vector2(-1, -1), Vector2(-1, 1)] # Diagonals
 			movementType.OMNIDIRECTIONAL:
 				directions = [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1), Vector2(1, 1), Vector2(1, -1), Vector2(-1, -1), Vector2(-1, 1)] # Cardinal + Diagonal
+	
+	func switch_cost_calculation(costCalc: costCalculation) -> void:
+		chosenCalculation = costCalc
 		
 	func solve_maze(maze: AStar.Maze) -> PackedVector2Array:
 		var start: Vector2 = maze.get_start()
@@ -67,7 +85,7 @@ class Solver:
 		if (start == goal):
 			return []
 			
-		var unvisited: Array[Cell] = [Cell.new(start, null, goal)]
+		var unvisited: Array[Cell] = [Cell.new(start, null, goal, chosenCalculation)]
 		var visited: Array[Cell] = []
 		
 		while (!unvisited.is_empty()):
@@ -99,10 +117,12 @@ class Solver:
 					var alreadyVisited: bool = false
 					for visitedCell in visited:
 						if (newPos == visitedCell.get_position()):
+							#if (cell.get_cost() < visitedCell.get_previous().get_cost()):
+							#	visitedCell.change_previous(cell)
 							alreadyVisited = true
 							break
 					if (!alreadyVisited): # Check if unvisited
-						neighbors.append(Cell.new(newPos, cell, goal))
+						neighbors.append(Cell.new(newPos, cell, goal, chosenCalculation))
 		
 		return neighbors
 	
@@ -147,6 +167,10 @@ class Maze:
 			if (grid[tile] == 3):
 				return Vector2(tile%int(gridSize.x), floor(tile/gridSize.x))
 		return Vector2.ZERO
+	
+	func set_size(x: int, y: int):
+		gridSize = Vector2(x, y)
+		grid.resize(x*y)
 	
 	func get_size() -> Vector2:
 		return gridSize

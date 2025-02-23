@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bshnwocwe7be5"]
-
-[ext_resource type="PackedScene" uid="uid://b0551lvxlc0ci" path="res://AStarHandler/astar_tester.tscn" id="1_1k5ln"]
-
-[node name="Main" type="Node"]
-
-[node name="Maze" parent="." instance=ExtResource("1_1k5ln")]

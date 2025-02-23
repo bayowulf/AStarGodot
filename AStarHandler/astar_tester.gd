@@ -26,8 +26,10 @@ func _ready() -> void:
 		$CanvasLayer/MazePresets.add_item(presetsDict.keys()[index], index)
 		$CanvasLayer/MazePresets.get_popup().set_item_as_radio_checkable(index, false)
 	$CanvasLayer/MazePresets.selected = -1
+	$CanvasLayer/XSize.value = gridSize.x
+	$CanvasLayer/YSize.value = gridSize.y
 	maze = AStar.Maze.new(gridSize)
-	solver = AStar.Solver.new(AStar.Solver.movementType.CARDINAL)
+	solver = AStar.Solver.new(AStar.Solver.movementType.CARDINAL, AStar.Solver.costCalculation.CUMULATIVE)
 	cachedPath = []
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -82,23 +84,21 @@ func handle_click() -> void:
 	if Input.is_action_pressed("left_click"):
 		var gridPos: Vector2 = floor(get_global_mouse_position()/tileSize)
 		if (gridPos.x >= 0 && gridPos.y >= 0 && gridPos.x < gridSize.x && gridPos.y < gridSize.y):
-			if (maze.get_tile_type(gridPos.x, gridPos.y) == 0):
-				maze.change_tile(
-					gridPos.x,
-					gridPos.y,
-					1
-				)
-				queue_redraw()
+			maze.change_tile(
+				gridPos.x,
+				gridPos.y,
+				$CanvasLayer/CellSelector.get_selected_id() + 1
+			)
+			queue_redraw()
 	elif Input.is_action_pressed("right_click"):
 		var gridPos: Vector2 = floor(get_global_mouse_position()/tileSize)
 		if (gridPos.x >= 0 && gridPos.y >= 0 && gridPos.x < gridSize.x && gridPos.y < gridSize.y):
-			if (maze.get_tile_type(gridPos.x, gridPos.y) == 1):
-				maze.change_tile(
-					gridPos.x,
-					gridPos.y,
-					0
-				)
-				queue_redraw()
+			maze.change_tile(
+				gridPos.x,
+				gridPos.y,
+				0
+			)
+			queue_redraw()
 
 func draw_solution(solution: PackedVector2Array) -> void:
 	for pos: int in solution.size():
@@ -109,9 +109,22 @@ func solve_maze() -> void:
 	cachedPath = solver.solve_maze(maze)
 	var totalTime: int = Time.get_ticks_msec() - startTime
 	$CanvasLayer/SolveTime.text = "Solve time: " + str(totalTime) + "ms"
+	$CanvasLayer/PathSize.text = "Path Size: " + str(cachedPath.size()) + " steps"
 	queue_redraw()
 
 func set_maze_preset(index: int) -> void:
 	$CanvasLayer/MazePresets.selected = -1
 	maze.set_maze(PackedInt32Array(presetsDict.values()[index]))
+	queue_redraw()
+
+func change_maze_size_to_selected(_val: float) -> void:
+	$CanvasLayer/XSize.get_line_edit().release_focus()
+	$CanvasLayer/YSize.get_line_edit().release_focus()
+	maze.set_size($CanvasLayer/XSize.value, $CanvasLayer/YSize.value)
+	gridSize = maze.get_size()
+	queue_redraw()
+
+func change_tile_size(val: float) -> void:
+	$CanvasLayer/TileSize.get_line_edit().release_focus()
+	tileSize = val
 	queue_redraw()

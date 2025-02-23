@@ -37,6 +37,16 @@ offset_right = 92.0
 grow_vertical = 0
 text = "Solve Time:"
 
+[node name="PathSize" type="Label" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -55.0
+offset_right = 40.0
+offset_bottom = -32.0
+grow_vertical = 0
+text = "Path Size:"
+
 [node name="MazePresets" type="OptionButton" parent="CanvasLayer"]
 anchors_preset = 1
 anchor_left = 1.0
@@ -53,5 +63,66 @@ offset_right = 62.0
 offset_bottom = 24.0
 text = "Presets"
 
+[node name="CellSelector" type="OptionButton" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -91.0
+offset_top = 32.0
+offset_bottom = 63.0
+grow_horizontal = 0
+selected = 0
+item_count = 3
+popup/item_0/text = "Blocker"
+popup/item_1/text = "Start"
+popup/item_1/id = 1
+popup/item_2/text = "Goal"
+popup/item_2/id = 2
+
+[node name="XSize" type="SpinBox" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -128.0
+offset_top = 64.0
+offset_bottom = 95.0
+grow_horizontal = 0
+min_value = 2.0
+value = 30.0
+allow_greater = true
+alignment = 2
+prefix = "X-Size: "
+
+[node name="YSize" type="SpinBox" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -128.0
+offset_top = 96.0
+offset_bottom = 127.0
+grow_horizontal = 0
+min_value = 2.0
+value = 15.0
+allow_greater = true
+alignment = 2
+prefix = "Y-Size: "
+
+[node name="TileSize" type="SpinBox" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -128.0
+offset_top = 128.0
+offset_bottom = 159.0
+grow_horizontal = 0
+min_value = 1.0
+value = 32.0
+allow_greater = true
+alignment = 2
+prefix = "Tile Size: "
+
 [connection signal="button_down" from="CanvasLayer/SolveMaze" to="." method="solve_maze"]
 [connection signal="item_selected" from="CanvasLayer/MazePresets" to="." method="set_maze_preset"]
+[connection signal="value_changed" from="CanvasLayer/XSize" to="." method="change_maze_size_to_selected"]
+[connection signal="value_changed" from="CanvasLayer/YSize" to="." method="change_maze_size_to_selected"]
+[connection signal="value_changed" from="CanvasLayer/TileSize" to="." method="change_tile_size"]
