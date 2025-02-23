@@ -25,7 +25,6 @@ class Solver:
 	#var unvisited: PackedVector2Array
 	#var visited: Array[Cell]
 	var directions: Array[Vector2]
-	var cachedSolution: PackedVector2Array
 	var solveTime: int
 	
 	func _init(movement: movementType) -> void:
@@ -43,7 +42,6 @@ class Solver:
 	func solve_maze(maze: AStar.Maze) -> PackedVector2Array:
 		print("Starting Solve")
 		var start_time: int = Time.get_ticks_msec()
-		clear_cache()
 		var start: Vector2 = maze.get_start()
 		var goal: Vector2 = maze.get_end()
 		if (start == goal):
@@ -57,16 +55,16 @@ class Solver:
 		
 		while (!unvisited.is_empty()):
 			if (unvisited[0].get_position() == goal):
-				cachedSolution = [unvisited[0].get_position()]
+				var path: PackedVector2Array = [unvisited[0].get_position()]
 				var nextCell = unvisited[0].get_previous()
 				
 				while (nextCell != null):
-					cachedSolution.append(nextCell.get_position())
+					path.append(nextCell.get_position())
 					nextCell = nextCell.get_previous()
 				
 				solveTime = Time.get_ticks_msec() - start_time
 				print("Time taken: " + str(solveTime) + " ms")
-				return cachedSolution
+				return path
 			var neighbors: Array[Cell] = get_neighbors(unvisited.pop_front(), maze, visited)
 			unvisited.append_array(neighbors)
 			visited.append_array(neighbors)
@@ -91,15 +89,6 @@ class Solver:
 						neighbors.append(Cell.new(newPos, cell))
 		
 		return neighbors
-	
-	func has_cached_solution() -> bool:
-		return !cachedSolution.is_empty()
-	
-	func get_cached_solution() -> PackedVector2Array:
-		return cachedSolution
-	
-	func clear_cache() -> void:
-		cachedSolution = []
 	
 	func get_solve_time() -> int:
 		return solveTime

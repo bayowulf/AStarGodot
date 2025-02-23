@@ -17,11 +17,13 @@ extends Node2D
 
 var maze: AStar.Maze
 var solver: AStar.Solver
+var cachedPath: PackedVector2Array
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	maze = AStar.Maze.new(gridSize)
 	solver = AStar.Solver.new(AStar.Solver.movementType.CARDINAL)
+	cachedPath = []
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -31,9 +33,9 @@ func _draw() -> void:
 	for row in gridSize.y:
 		for col in gridSize.x:
 			draw_square(col*tileSize, row*tileSize, maze.grid[row*gridSize.x + col]) # Draw all squares
-	if (solver.has_cached_solution()):
-		draw_solution(solver.get_cached_solution())
-		solver.clear_cache()
+	if (!cachedPath.is_empty()):
+		draw_solution(cachedPath)
+		cachedPath = []
 
 func draw_square(x: int, y: int, tileType: int) -> void:
 	var rect = Rect2(x, y, tileSize, tileSize)
@@ -98,6 +100,6 @@ func draw_solution(solution: PackedVector2Array) -> void:
 		draw_square(pos.x*tileSize, pos.y*tileSize, 4)
 
 func solve_maze() -> void:
-	solver.solve_maze(maze)
+	cachedPath = solver.solve_maze(maze)
 	$CanvasLayer/SolveTime.text = "Solve time: " + str(solver.get_solve_time()) + "ms"
 	queue_redraw()

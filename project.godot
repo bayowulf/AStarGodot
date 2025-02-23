@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="A*"
+config/name="AStar"
 run/main_scene="res://AStarHandler/astar_tester.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 
