@@ -73,8 +73,8 @@ class Solver:
 		while (!unvisited.is_empty()):
 			var lowestCost: Cell = unvisited.pop_at(get_lowest_cost(unvisited))
 			if (lowestCost.get_position() == goal): # Found path
-				var path: PackedVector2Array = [unvisited.back().get_position()]
-				var nextCell = unvisited.back().get_previous()
+				var path: PackedVector2Array = [lowestCost.get_position()]
+				var nextCell = lowestCost
 				
 				while (nextCell != null):
 					path.append(nextCell.get_position())

@@ -27,7 +27,7 @@ func _ready() -> void:
 		$CanvasLayer/MazePresets.get_popup().set_item_as_radio_checkable(index, false)
 	$CanvasLayer/MazePresets.selected = -1
 	maze = AStar.Maze.new(gridSize)
-	solver = AStar.Solver.new(AStar.Solver.movementType.OMNIDIRECTIONAL)
+	solver = AStar.Solver.new(AStar.Solver.movementType.CARDINAL)
 	cachedPath = []
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -101,8 +101,8 @@ func handle_click() -> void:
 				queue_redraw()
 
 func draw_solution(solution: PackedVector2Array) -> void:
-	for pos: Vector2 in solution:
-		draw_square(pos.x*tileSize, pos.y*tileSize, 4)
+	for pos: int in solution.size():
+		draw_square(solution[pos].x*tileSize, solution[pos].y*tileSize, 4)
 
 func solve_maze() -> void:
 	var startTime: int = Time.get_ticks_msec()
