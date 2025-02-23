@@ -105,8 +105,10 @@ func draw_solution(solution: PackedVector2Array) -> void:
 		draw_square(pos.x*tileSize, pos.y*tileSize, 4)
 
 func solve_maze() -> void:
+	var startTime: int = Time.get_ticks_msec()
 	cachedPath = solver.solve_maze(maze)
-	$CanvasLayer/SolveTime.text = "Solve time: " + str(solver.get_solve_time()) + "ms"
+	var totalTime: int = Time.get_ticks_msec() - startTime
+	$CanvasLayer/SolveTime.text = "Solve time: " + str(totalTime) + "ms"
 	queue_redraw()
 
 func set_maze_preset(index: int) -> void:

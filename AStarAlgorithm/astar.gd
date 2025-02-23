@@ -62,14 +62,9 @@ class Solver:
 				directions = [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1), Vector2(1, 1), Vector2(1, -1), Vector2(-1, -1), Vector2(-1, 1)] # Cardinal + Diagonal
 		
 	func solve_maze(maze: AStar.Maze) -> PackedVector2Array:
-		print("Starting Solve")
-		var start_time: int = Time.get_ticks_msec()
 		var start: Vector2 = maze.get_start()
 		var goal: Vector2 = maze.get_end()
 		if (start == goal):
-			print("AStar [ERROR]: Invalid start/end")
-			solveTime = Time.get_ticks_msec() - start_time
-			print("Time taken: " + str(solveTime) + " ms")
 			return []
 			
 		var unvisited: Array[Cell] = [Cell.new(start, null, goal)]
@@ -84,15 +79,12 @@ class Solver:
 					path.append(nextCell.get_position())
 					nextCell = nextCell.get_previous()
 				
-				solveTime = Time.get_ticks_msec() - start_time
-				print("Time taken: " + str(solveTime) + " ms")
 				return path
 			
 			var neighbors: Array[Cell] = get_neighbors(unvisited.pop_at(get_lowest_cost(unvisited)), maze, visited, goal)
 			unvisited.append_array(neighbors)
 			visited.append_array(neighbors)
 		
-		print("No path found")
 		return []
 	
 	func get_neighbors(cell: Cell, maze: AStar.Maze, visited: Array[Cell], goal: Vector2) -> Array[Cell]:
@@ -119,9 +111,6 @@ class Solver:
 			if cells[index].get_cost() < cells[lowestCost].get_cost():
 				lowestCost = index
 		return lowestCost
-	
-	func get_solve_time() -> int:
-		return solveTime
 
 
 
