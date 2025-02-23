@@ -26,6 +26,10 @@ func _ready() -> void:
 		$CanvasLayer/MazePresets.add_item(presetsDict.keys()[index], index)
 		$CanvasLayer/MazePresets.get_popup().set_item_as_radio_checkable(index, false)
 	$CanvasLayer/MazePresets.selected = -1
+	for index in AStar.Solver.movementType.keys().size():
+		$CanvasLayer/MovementType.add_item(AStar.Solver.movementType.keys()[index], index)
+	for index in AStar.Solver.costCalculation.keys().size():
+		$CanvasLayer/CostCalculations.add_item(AStar.Solver.costCalculation.keys()[index], index)
 	$CanvasLayer/XSize.value = gridSize.x
 	$CanvasLayer/YSize.value = gridSize.y
 	maze = AStar.Maze.new(gridSize)
@@ -128,3 +132,9 @@ func change_tile_size(val: float) -> void:
 	$CanvasLayer/TileSize.get_line_edit().release_focus()
 	tileSize = val
 	queue_redraw()
+
+func change_movement(index: int) -> void:
+	solver.change_movement(index)
+
+func change_cost_calculation(index: int) -> void:
+	solver.change_cost_calculation(index)

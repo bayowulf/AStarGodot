@@ -55,7 +55,7 @@ offset_left = -72.0
 offset_bottom = 20.0
 grow_horizontal = 0
 
-[node name="Label" type="Label" parent="CanvasLayer/MazePresets"]
+[node name="Presets" type="Label" parent="CanvasLayer/MazePresets"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 1.0
@@ -78,6 +78,28 @@ popup/item_1/text = "Start"
 popup/item_1/id = 1
 popup/item_2/text = "Goal"
 popup/item_2/id = 2
+
+[node name="MovementType" type="OptionButton" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -96.0
+offset_top = 160.0
+offset_bottom = 180.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="CostCalculations" type="OptionButton" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -145.0
+offset_top = 192.0
+offset_bottom = 212.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+size_flags_vertical = 4
 
 [node name="XSize" type="SpinBox" parent="CanvasLayer"]
 anchors_preset = 1
@@ -123,6 +145,8 @@ prefix = "Tile Size: "
 
 [connection signal="button_down" from="CanvasLayer/SolveMaze" to="." method="solve_maze"]
 [connection signal="item_selected" from="CanvasLayer/MazePresets" to="." method="set_maze_preset"]
+[connection signal="item_selected" from="CanvasLayer/MovementType" to="." method="change_movement"]
+[connection signal="item_selected" from="CanvasLayer/CostCalculations" to="." method="change_cost_calculation"]
 [connection signal="value_changed" from="CanvasLayer/XSize" to="." method="change_maze_size_to_selected"]
 [connection signal="value_changed" from="CanvasLayer/YSize" to="." method="change_maze_size_to_selected"]
 [connection signal="value_changed" from="CanvasLayer/TileSize" to="." method="change_tile_size"]

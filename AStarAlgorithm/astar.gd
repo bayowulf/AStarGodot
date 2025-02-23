@@ -64,10 +64,10 @@ class Solver:
 	var solveTime: int
 	
 	func _init(movement: movementType, costCalc: costCalculation) -> void:
-		switch_movement(movement)
-		switch_cost_calculation(costCalc)
+		change_movement(movement)
+		change_cost_calculation(costCalc)
 	
-	func switch_movement(movement: movementType) -> void:
+	func change_movement(movement: movementType) -> void:
 		match movement:
 			movementType.CARDINAL:
 				directions = [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)] # Cardinal
@@ -76,7 +76,7 @@ class Solver:
 			movementType.OMNIDIRECTIONAL:
 				directions = [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1), Vector2(1, 1), Vector2(1, -1), Vector2(-1, -1), Vector2(-1, 1)] # Cardinal + Diagonal
 	
-	func switch_cost_calculation(costCalc: costCalculation) -> void:
+	func change_cost_calculation(costCalc: costCalculation) -> void:
 		chosenCalculation = costCalc
 		
 	func solve_maze(maze: AStar.Maze) -> PackedVector2Array:
