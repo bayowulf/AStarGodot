@@ -71,7 +71,8 @@ class Solver:
 		var visited: Array[Cell] = []
 		
 		while (!unvisited.is_empty()):
-			if (unvisited.back().get_position() == goal): # Found path
+			var lowestCost: Cell = unvisited.pop_at(get_lowest_cost(unvisited))
+			if (lowestCost.get_position() == goal): # Found path
 				var path: PackedVector2Array = [unvisited.back().get_position()]
 				var nextCell = unvisited.back().get_previous()
 				
@@ -81,7 +82,7 @@ class Solver:
 				
 				return path
 			
-			var neighbors: Array[Cell] = get_neighbors(unvisited.pop_at(get_lowest_cost(unvisited)), maze, visited, goal)
+			var neighbors: Array[Cell] = get_neighbors(lowestCost, maze, visited, goal)
 			unvisited.append_array(neighbors)
 			visited.append_array(neighbors)
 		

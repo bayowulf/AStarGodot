@@ -27,7 +27,7 @@ func _ready() -> void:
 		$CanvasLayer/MazePresets.get_popup().set_item_as_radio_checkable(index, false)
 	$CanvasLayer/MazePresets.selected = -1
 	maze = AStar.Maze.new(gridSize)
-	solver = AStar.Solver.new(AStar.Solver.movementType.CARDINAL)
+	solver = AStar.Solver.new(AStar.Solver.movementType.OMNIDIRECTIONAL)
 	cachedPath = []
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
