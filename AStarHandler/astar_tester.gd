@@ -1,5 +1,6 @@
 extends Node2D
-
+##Maze
+##sets up grid parameters - see Maze Inspector 
 @export_category("Maze")
 @export var gridSize: Vector2 = Vector2(10, 10)
 @export var tileSize: int = 16
@@ -22,6 +23,7 @@ var cachedPath: PackedVector2Array
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	print_rich("[font_size=15][color=yellowgreen]Astar_tester._ready ENTERED. presetsDict = ", presetsDict)
 	for index in len(presetsDict):
 		$CanvasLayer/MazePresets.add_item(presetsDict.keys()[index], index)
 		$CanvasLayer/MazePresets.get_popup().set_item_as_radio_checkable(index, false)
@@ -41,6 +43,7 @@ func _process(_delta: float) -> void:
 	handle_click()
 
 func _draw() -> void:
+	print_rich("[font_size=15][color=mediumspring]Astar_tester._draw ENTERED.")
 	for row in gridSize.y:
 		for col in gridSize.x:
 			draw_square(col*tileSize, row*tileSize, maze.grid[row*gridSize.x + col]) # Draw all squares
@@ -49,6 +52,7 @@ func _draw() -> void:
 		cachedPath = []
 
 func draw_square(x: int, y: int, tileType: int) -> void:
+	print_rich("[font_size=15][color=olive]Astar_tester.draw_square ENTERED.")
 	var rect = Rect2(x, y, tileSize, tileSize)
 	match tileType:
 		0:

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b0551lvxlc0ci"]
 
-[ext_resource type="Script" path="res://AStarHandler/astar_tester.gd" id="1_cn8hc"]
+[ext_resource type="Script" uid="uid://by4dn0reeep0c" path="res://AStarHandler/astar_tester.gd" id="1_cn8hc"]
 
 [node name="Maze" type="Node2D"]
 script = ExtResource("1_cn8hc")
@@ -75,6 +75,7 @@ grow_horizontal = 0
 selected = 0
 item_count = 3
 popup/item_0/text = "Blocker"
+popup/item_0/id = 0
 popup/item_1/text = "Start"
 popup/item_1/id = 1
 popup/item_2/text = "Goal"
